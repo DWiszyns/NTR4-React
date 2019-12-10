@@ -32,7 +32,7 @@ const NoteEdit = props => {
     const handleAddCategory = newCategory =>{
         if(newCategory!='')
         {
-            if(categories.filter(c=>c.title===newCategory).length>0)
+            if(categories.filter(c=>c.title===newCategory).length===0)
                 setCategories(categories.concat({title: newCategory}))
         }
     }
@@ -52,7 +52,7 @@ const NoteEdit = props => {
         }
     }
 
-    const handleSubmit = async e => {
+    const handleOnSubmit = async e => {
         e.preventDefault();
         const response = await fetch('/api/world', {
           method: 'POST',
@@ -70,9 +70,9 @@ const NoteEdit = props => {
     <Formik
         initialValues={{ title, text, date, markdown, categories, newCategory }}
         validate={validate}
-        onSubmit={handleSubmit}
+        onSubmit={handleOnSubmit}
     >
-        {({ handleChange, validate, values, handleSubmit }) => (
+        {({ handleChange, validate, values, handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit}>
             <Form.Group>
                 <Form.Label>Title</Form.Label><br/>
@@ -110,20 +110,22 @@ const NoteEdit = props => {
                         onChange={handleChange}
                         value={values.newCategory}
                     />
-                <Button variant="outline-primary" type="submit" onClick={handleAddCategory} title="Add category">Add category</Button>
+                <Button variant="outline-primary" onClick={() => { handleAddCategory(values.newCategory); values.newCategory = ''; }}
+                        title="Add category">Add category</Button>
             </Form.Group>
             <Form.Group>
                 <Form.Label>Note's categories</Form.Label><br/>
                 <ListGroup>
                     {categories.map(({title}) => (
                         <Row>
-                            <ListGroup.Item type="button" onClick={() => chooseCategory(title)} variant="outline-secondary" action key={title}>{title}</ListGroup.Item>
+                            <ListGroup.Item type="button" onClick={() => chooseCategory(title)} variant="outline-secondary"
+                                            action key={title}>{title}</ListGroup.Item>
                         </Row>
                     ))}
                 </ListGroup>
-                <Button variant="outline-primary" type="submit" onClick={handleRemoveCategory} title="Remove category">Remove category</Button>
+                <Button variant="outline-primary" onClick={handleRemoveCategory} title="Remove category">Remove category</Button>
             </Form.Group>
-            <Button variant="primary" type="submit" onClick={handleSubmit} title="Submit">Create note</Button>
+            <Button variant="primary" type="submit" disabled={isSubmitting} title="Submit">Create note</Button>
         </Form>
         )}
     </Formik>
