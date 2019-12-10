@@ -55,12 +55,14 @@ const NoteList = props => {
                 <Button variant="primary" type="submit" title="Submit">Filter</Button>
             </Form>
             <Table striped bordered hover>
-                <tbody>
+                <thead>
                     <tr>
                         <th>Date</th>
                         <th>Title</th>
-                        <th></th>
                     </tr>
+                </thead>
+                <tbody>
+
                 </tbody>
             </Table>
              <Link to={'/notes/new'}>
