@@ -75,7 +75,7 @@ const NoteEdit = props => {
         {({ handleChange, validate, values, handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
             <Form.Group>
-                <Form.Label>Title</Form.Label>
+                <Form.Label>Title</Form.Label><br/>
                 <Form.Control
                     type="text"
                     name="title"
@@ -84,7 +84,7 @@ const NoteEdit = props => {
                   />
             </Form.Group>
             <Form.Group>
-                <Form.Label>Text</Form.Label>
+                <Form.Label>Text</Form.Label><br/>
                 <Form.Control
                     type="text"
                     name="text"
@@ -103,25 +103,27 @@ const NoteEdit = props => {
                 <Form.Label>Markdown</Form.Label>
             </Form.Check>
             <Form.Group>
-                <Form.Label>New category</Form.Label>
+                <Form.Label>New category</Form.Label><br/>
                 <Form.Control
                         type="text"
                         name="newCategory"
                         onChange={handleChange}
-                        value={values.text}
+                        value={values.newCategory}
                     />
-                <Button onPress={handleAddCategory} title="Add category" />
+                <Button variant="outline-primary" type="submit" onClick={handleAddCategory} title="Add category">Add category</Button>
             </Form.Group>
             <Form.Group>
-                <Form.Label>Note's categories</Form.Label>
+                <Form.Label>Note's categories</Form.Label><br/>
                 <ListGroup>
                     {categories.map(({title}) => (
-                        <ListGroup.Item type="button" onClick={() => chooseCategory(title)} action key={title}>{title}</ListGroup.Item>
+                        <Row>
+                            <ListGroup.Item type="button" onClick={() => chooseCategory(title)} variant="outline-secondary" action key={title}>{title}</ListGroup.Item>
+                        </Row>
                     ))}
                 </ListGroup>
-                <Button onPress={handleRemoveCategory} title="Remove category" />
+                <Button variant="outline-primary" type="submit" onClick={handleRemoveCategory} title="Remove category">Remove category</Button>
             </Form.Group>
-            <Button onPress={handleSubmit} title="Submit" />
+            <Button variant="primary" type="submit" onClick={handleSubmit} title="Submit">Create note</Button>
         </Form>
         )}
     </Formik>
