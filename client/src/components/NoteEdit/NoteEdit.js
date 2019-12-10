@@ -50,17 +50,6 @@ const NoteEdit = props => {
     }
 
     const handleOnSubmit = async e => {
-        e.preventDefault();
-        const response = await fetch('/api/world', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ post: this.state.post }),
-        });
-        const body = await response.text();
-        
-        this.setState({ responseToPost: body });
       };
 
     return(
@@ -88,6 +77,15 @@ const NoteEdit = props => {
                     onChange={handleChange}
                     value={values.text}
                   />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Date</Form.Label><br/>
+                <Form.Control
+                    type="date"
+                    name="date"
+                    onChange={handleChange}
+                    value={values.date}
+                />
             </Form.Group>
             <Form.Check controlId="formNoteMarkdown">
                 <Form.Check.Input
@@ -122,7 +120,7 @@ const NoteEdit = props => {
                 </ListGroup>
                 <Button variant="outline-primary" onClick={handleRemoveCategory} title="Remove category">Remove category</Button>
             </Form.Group>
-            <Button variant="primary" type="submit" disabled={isSubmitting} title="Submit">Create note</Button>
+            <Button variant="primary" type="submit" title="Submit">Create note</Button>
         </Form>
         )}
     </Formik>

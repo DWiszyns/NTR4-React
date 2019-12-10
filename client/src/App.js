@@ -7,6 +7,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Container from 'react-bootstrap/Container';
 import NoteNew from './components/NoteNew/NoteNew';
+import NoteList from './components/NoteList/NoteList';
+import NoteEdit from './components/NoteEdit/NoteEdit';
+
+
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import { StateProvider } from './state';
 
@@ -50,7 +54,9 @@ render() {
     //<StateProvider initialState={initialState} reducer={reducer}>
       <Router>
         <Container>
-          <Route exact path="/" component={NoteNew} />
+          <Route exact path="/notes/new" component={NoteNew} />
+          <Route exact path="/notes/edit/:title" component={NoteEdit} />
+          <Route exact path="/" component={NoteList} />
         </Container>
       </Router>
     //</StateProvider>
