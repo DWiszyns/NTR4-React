@@ -15,7 +15,7 @@ const NoteEdit = props => {
     const markdown = props.markdown || false;
     const date = props.date || moment(new Date()).format("YYYY-MM-DD");
     const newCategory = '';
-    const [chosenCategory, setChosenCategory] = React.useState('');
+    const [selectedCategory, setSelectedCategory] = React.useState('');
     const [removeEnabled, setRemoveEnabled] = React.useState(false);
     const [categories, setCategories] = React.useState(props.categories || [{id:0, title:'first category'},{id:1, title:'second category'}]);
     const [errorMessage, setErrorMessage] = React.useState('');
@@ -30,25 +30,22 @@ const NoteEdit = props => {
     }
 
     const handleAddCategory = newCategory =>{
-        if(newCategory!='')
+        if(newCategory!=='')
         {
             if(categories.filter(c=>c.title===newCategory).length===0)
                 setCategories(categories.concat({title: newCategory}))
         }
     }
 
-    const chooseCategory = c =>{
+    const selectCategory = c =>{
+        setSelectedCategory(c)
 
     }
 
-    const handleRemoveCategory = categoriesToRemove =>{
-        if(categoriesToRemove==null || categoriesToRemove === undefined)
+    const handleRemoveCategory = e =>{
+        if(selectedCategory!=null || selectedCategory !== undefined)
         {
-            categoriesToRemove.forEach(element => {
-                categories.remove(element)
-            });
-            if(categories.filter(c=>c.title===newCategory).length>0)
-                setCategories(categories.concat({title: newCategory}))
+            setCategories(categories.filter(c=>c.title!==selectedCategory))
         }
     }
 
@@ -118,7 +115,7 @@ const NoteEdit = props => {
                 <ListGroup>
                     {categories.map(({title}) => (
                         <Row>
-                            <ListGroup.Item type="button" onClick={() => chooseCategory(title)} variant="outline-secondary"
+                            <ListGroup.Item type="button" onClick={() => selectCategory(title)} variant="outline-secondary"
                                             action key={title}>{title}</ListGroup.Item>
                         </Row>
                     ))}
