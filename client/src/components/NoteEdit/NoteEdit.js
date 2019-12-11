@@ -17,7 +17,7 @@ const NoteEdit = props => {
     const newCategory = '';
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const [removeEnabled, setRemoveEnabled] = React.useState(false);
-    const [categories, setCategories] = React.useState(props.categories || [{id:0, title:'first category'},{id:1, title:'second category'}]);
+    const [categories, setCategories] = React.useState(props.noteCategories || [{id:0, title:'first category'},{id:1, title:'second category'}]);
     const [errorMessage, setErrorMessage] = React.useState('');
 
 

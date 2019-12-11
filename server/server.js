@@ -1,11 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const notesController = require('./controllers/NotesController');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const router = express.Router();
+router.get('/notes', notesController.get_notes);
+// app.get('/notes/:title', notesController.get_note);
+// app.post('/notes', notesController.post_note);
+// app.put('/notes/:title', notesController.update_note);
+// app.delete('/notes/:title', notesController.delete_note);
+app.use('/api', router);
+
 
 app.get('/api/hello', (req, res) => {
     res.send({ express: 'Hello From Express' });
