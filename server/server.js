@@ -8,6 +8,7 @@ const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors())
 const router = express.Router();
 router.get('/notes', notesController.get_notes);
 // app.get('/notes/:title', notesController.get_note);

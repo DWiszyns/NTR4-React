@@ -13,7 +13,7 @@ const API = 'http://localhost:5000/api';
 const NoteList = props => {
     const [dateFrom,setDateFrom]= React.useState(props.dateFrom || moment(new Date().setMonth(2)).format("YYYY-MM-DD"));
     const [dateTo,setDateTo] = React.useState(props.dateTo || moment(new Date()).format("YYYY-MM-DD"));
-    const [category,setCategory] = React.useState(props.category || 'first category');
+    const [category,setCategory] = React.useState(props.category || '');
     const [page,setCurrentPage]= React.useState(props.page || 1);
     const [notes, setNotes] = React.useState([]);
     const [categories, setCategories] = React.useState([]);
@@ -23,11 +23,11 @@ const NoteList = props => {
     },[dateFrom,dateTo,category,page]);
 
     const loadPage = () => {
-        // const params = new URLSearchParams(location.search);
+        //const params = new URLSearchParams(location.search);
         axios
             .get(
-                `${API}/notes?page=${page}&category=${category}&startDate=${dateFrom &&
-                moment(dateFrom).format("YYYY-MM-DD")}&endDate=${dateTo &&
+                `${API}/notes?page=${page}&category=${category}&dateFrom=${dateFrom &&
+                moment(dateFrom).format("YYYY-MM-DD")}&dateTo=${dateTo &&
                 moment(dateTo).format("YYYY-MM-DD")}`
             )
             .then(res => res.data)
@@ -74,11 +74,7 @@ const NoteList = props => {
     };
 
     const handleSubmit = async e => {
-
-    };
-
-    const handleChange = async e => {
-
+        loadPage()
     };
 
 
@@ -92,7 +88,6 @@ const NoteList = props => {
                     type="date"
                     name="dateFrom"
                     onChange={e => {
-                        handleChange(e);
                         setDateFrom(e.target.value);
                     }}
                     value={dateFrom}
@@ -104,7 +99,6 @@ const NoteList = props => {
                     type="date"
                     name="dateTo"
                     onChange={e => {
-                        handleChange(e);
                         setDateTo(e.target.value);
                     }}
                     value={dateTo}
@@ -112,9 +106,15 @@ const NoteList = props => {
             </Form.Group>
             <Form.Group>
                 <Form.Label>Category</Form.Label><br/>
-                <Form.Control as="select" name="categories" value={{category}}>
-                    <option>first category</option>
-                    <option>second category</option>
+                <Form.Control as="select" name="categories"
+                    onChange={e => {
+                        setCategory(e.target.value);
+                    }}
+                    value={{category}}>
+                    {categories.forEach(c => (
+                            <option>c.title</option>
+                        )
+                    )}
                 </Form.Control>
             </Form.Group>
             <Button variant="primary" type="submit" title="Submit">Filter</Button>

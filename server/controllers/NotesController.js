@@ -6,17 +6,17 @@ let moment = require('moment');
 exports.get_notes = function(req, res) {
     let repo = new NoteRepository()
     let noteResponse= repo.findAll()
-    var notes = noteResponse.notes
+    var notes = noteResponse.notes.slice()
     let pageNumber = parseInt(req.query.pageNumber)||1
     let pageSize = 4
-    if(req.query.category!=null && req.category!==''){
+    if(req.query.category!=null && req.query.category!==''){
         notes=notes.filter(n=>n.noteCategories.includes(req.category))
     }
     if(req.query.dateFrom!=null){
-        notes=notes.filter(n=>n.date>=req.dateFrom)
+        notes=notes.filter(n=>n.date>=req.query.dateFrom)
     }
     if(req.query.dateTo!=null){
-        notes=notes.filter(n=>n.date<=req.dateTo)
+        notes=notes.filter(n=>n.date<=req.query.dateTo)
     }
     const pager = paginate(notes.length, pageNumber, pageSize);
     pager.endPage = Math.ceil(notes.length / pageSize);

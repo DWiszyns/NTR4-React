@@ -118,7 +118,7 @@ module.exports = class NoteRepository {
                 note.noteCategories.push(category);
             });
 
-        note.date = lines[1].split(':')[1].trim();
+        note.date = moment(lines[1].split(':')[1].trim()).format('YYYY-MM-DD');
         if(readText){
             for (var i = 2; i < lines.length; ++i)
                 note.text += lines[i]
