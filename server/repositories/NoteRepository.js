@@ -61,20 +61,20 @@ module.exports = class NoteRepository {
 
     save(note)
     {
-        const lines = []
-        lines.concat("category: ");
-        for (var i = 0; i < note.categories.length; ++i)
+        let lines = ''
+        lines=lines.concat("category: ");
+        for (var i = 0; i < note.noteCategories.length; ++i)
         {
-            lines.concat(note.noteCategories[i]);
+            lines=lines.concat(note.noteCategories[i].title);
             if (i < note.noteCategories.length - 1)
             {
-                lines.concat(",");
+                lines=lines.concat(",");
             }
         }
-        lines.concat("\ndate: ");
-        lines.concat(note.date+ "\n");
-        lines.concat(note.text);
-        let path = directoryPath +"/"+ note.title +"."+ note.markdown ? '.md':'.txt';
+        lines=lines.concat("\ndate: ");
+        lines=lines.concat(note.date+ "\n");
+        lines=lines.concat(note.text);
+        let path = `${directoryPath}/${note.title}${note.markdown ? '.md':'.txt'}`;
         fs.writeFileSync(path,lines);
 
     }

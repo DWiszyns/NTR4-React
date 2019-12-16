@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { Link, withRouter } from 'react-router-dom';
+import axios from "axios";
+const API = 'http://localhost:5000/api';
 
 
 const NoteEdit = props => {
@@ -14,6 +16,7 @@ const NoteEdit = props => {
     const text = props.content || 'Enter text';
     const markdown = props.markdown || false;
     const date = props.date || moment(new Date()).format("YYYY-MM-DD");
+    const mode = props.mode==='new'? props.mode : 'edit';
     const newCategory = '';
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const [removeEnabled, setRemoveEnabled] = React.useState(false);
@@ -49,7 +52,49 @@ const NoteEdit = props => {
         }
     }
 
-    const handleOnSubmit = async e => {
+    const handleOnSubmit = (values) => {
+        if(mode==='new'){
+            axios
+                .post(`${API}/notes`, {
+                    title: values.title,
+                    text: values.text,
+                    markdown: values.markdown,
+                    date: values.date,
+                    noteCategories: categories,
+                })
+                .then(res => {
+                    if (res.data !== 'Success') {
+                        setErrorMessage(res.data);
+                    } else {
+                        props.history.push('/'); //go back to main menu
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+        }
+        else{
+            axios
+                .put(`${API}/notes/${props.title}`,{
+                title: values.title,
+                text: values.text,
+                markdown: values.markdown,
+                date: values.date,
+                categories: categories,
+                }) //old title
+                .then(res=> {
+                    if (res.data !== 'Success') {
+                        setErrorMessage(res.data);
+                    } else {
+                        props.history.push('/'); //go back to main menu
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+            }
       };
 
     return(

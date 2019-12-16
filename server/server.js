@@ -12,9 +12,9 @@ app.use(cors())
 const router = express.Router();
 router.get('/notes', notesController.get_notes);
 router.get('/notes/:title', notesController.get_note);
-// app.post('/notes', notesController.post_note);
-// app.put('/notes/:title', notesController.update_note);
-// app.delete('/notes/:title', notesController.delete_note);
+router.post('/notes', notesController.post_note);
+router.put('/notes/:title', notesController.update_note);
+router.delete('/notes/:title', notesController.delete_note);
 app.use('/api', router);
 
 

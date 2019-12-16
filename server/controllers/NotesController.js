@@ -31,14 +31,50 @@ exports.get_note = function(req, res) {
     res.send({data:note})
 };
 
-// exports.post_note = function(req, res) {
-//     res.send('NOT IMPLEMENTED: Author create GET');
-// };
-//
-// exports.update_note = function(req, res) {
-//     res.send('NOT IMPLEMENTED: Author create POST');
-// };
-//
-// exports.delete_note = function(req, res) {
-//     res.send('NOT IMPLEMENTED: Author delete GET');
-// };
+exports.post_note = function(req, res) {
+    let note = new Note(
+        req.body.noteCategories,
+        req.body.markdown,
+        req.body.text,
+        req.body.title,
+        req.body.date
+    );
+
+    const noteRepository = new NoteRepository();
+    try {
+        noteRepository.save(note);
+    } catch (err) {
+        return res.send(err.message);
+    }
+    res.send('Success');
+};
+
+exports.update_note = function(req, res) {
+    let note = new Note(
+        req.body.title,
+        req.body.date,
+        req.body.noteCategories,
+        req.body.markdown,
+        req.body.text
+    );
+
+    const noteRepository = new NoteRepository();
+    try {
+        noteRepository.update(req.params.title,note);
+    } catch (err) {
+        return res.send(err.message);
+    }
+    res.send('Success');
+};
+
+exports.delete_note = function(req, res) {
+    const title = req.params.title;
+
+    const noteRepository = new NoteRepository();
+    try {
+        noteRepository.delete(title);
+    } catch (err) {
+        return res.send(err.message);
+    }
+    res.send('Success');
+};

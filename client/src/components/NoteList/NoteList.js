@@ -30,10 +30,6 @@ class NoteList extends  Component {
 
     loadPage(){
         const params = new URLSearchParams(window.location.search);
-        console.log("I'm called")
-        console.log(`${API}/notes?page=${this.state.page}&category=${this.state.category}&dateFrom=${this.state.dateFrom &&
-                moment(this.state.dateFrom).format("YYYY-MM-DD")}&dateTo=${this.state.dateTo &&
-                moment(this.state.dateTo).format("YYYY-MM-DD")}`)
         let respon={}
         axios
             .get(
@@ -60,18 +56,18 @@ class NoteList extends  Component {
         this.loadPage();
     }
 
-    // const deleteNote = title => {
-    //     axios
-    //         .delete(`${API}/notes/${title}`)
-    //         .then(res => {
-    //             if (res.data === 'Success') {
-    //                 setNotes(notes.filter(note => note.title !== title));
-    //             }
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         });
-    // };
+    deleteNote = title => {
+        axios
+            .delete(`${API}/notes/${title}`)
+            .then(res => {
+                if (res.data === 'Success') {
+                    this.loadPage()
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
 
     // const setFilters = (newCategory, newStartDate, newEndDate) => {
     //     // dispatch({
@@ -97,21 +93,21 @@ class NoteList extends  Component {
         const formValues  = this.state;
         formValues[target.name] = target.value;
         this.setState({ formValues });
-        this.loadPage()
+       // this.loadPage()
     };
     previousPage=()=>{
         const formValues  = this.state;
         formValues.page=formValues.page-1;
         this.setState({ formValues });
         this.loadPage()
-    }
+    };
 
     nextPage=()=>{
         const formValues  = this.state;
         formValues.page=formValues.page+1;
         this.setState({ formValues });
         this.loadPage()
-    }
+    };
 
     render(){
         return <div>
@@ -171,7 +167,7 @@ class NoteList extends  Component {
                                 <Link to={`/notes/edit/${n.title}`}>
                                     <Button type="button" variant="secondary">Edit</Button>
                                 </Link>
-                                <Button type="button" variant="secondary" onClick={() => this.delete(n.title)}>Delete</Button>
+                                <Button type="button" variant="secondary" onClick={() => this.deleteNote(n.title)}>Delete</Button>
                             </td>
                         </tr>
                     )
