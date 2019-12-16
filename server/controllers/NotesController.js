@@ -51,11 +51,11 @@ exports.post_note = function(req, res) {
 
 exports.update_note = function(req, res) {
     let note = new Note(
-        req.body.title,
-        req.body.date,
         req.body.noteCategories,
         req.body.markdown,
-        req.body.text
+        req.body.text,
+        req.body.title,
+        req.body.date
     );
 
     const noteRepository = new NoteRepository();

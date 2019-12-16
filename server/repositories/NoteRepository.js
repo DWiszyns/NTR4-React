@@ -49,7 +49,7 @@ module.exports = class NoteRepository {
 
     }
 
-    update(oldtitle, newnote)
+    update(oldTitle, newNote)
     {
         if (oldTitle !== newNote.title && this.noteExists(newNote)) {
             throw Error(`Note '${newNote.title}' already exists`);

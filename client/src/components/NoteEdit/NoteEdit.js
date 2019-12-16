@@ -81,7 +81,7 @@ const NoteEdit = props => {
                 text: values.text,
                 markdown: values.markdown,
                 date: values.date,
-                categories: categories,
+                noteCategories: categories,
                 }) //old title
                 .then(res=> {
                     if (res.data !== 'Success') {
