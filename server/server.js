@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 const router = express.Router();
 router.get('/notes', notesController.get_notes);
-// app.get('/notes/:title', notesController.get_note);
+router.get('/notes/:title', notesController.get_note);
 // app.post('/notes', notesController.post_note);
 // app.put('/notes/:title', notesController.update_note);
 // app.delete('/notes/:title', notesController.delete_note);

@@ -105,19 +105,31 @@ module.exports = class NoteRepository {
         note.markdown = extension === '.md'
         const fileContent = fs.readFileSync(directoryPath + '/' + file, 'utf-8');
         const lines = fileContent.split('\n');
-        lines[0]
-            .split(':')[1]
-            .split(',')
-            .forEach(category => {
-                category = category.trim();
-                if (category.length === 0) return;
+        if(!readText){
+            lines[0]
+                .split(':')[1]
+                .split(',')
+                .forEach(category => {
+                    category = category.trim();
+                    if (category.length === 0) return;
 
-                if (!this.categories.includes(category)) {
-                    this.categories.push(category);
-                }
-                note.noteCategories.push(category);
-            });
+                    if (!this.categories.includes(category)) {
+                        this.categories.push(category);
+                    }
+                    note.noteCategories.push(category);
+                });
+        }
+        else{
+            lines[0]
+                .split(':')[1]
+                .split(',')
+                .forEach(category => {
+                    category = category.trim();
+                    if (category.length === 0) return;
+                    note.noteCategories.push({title:category});
+                });
 
+        }
         note.date = moment(lines[1].split(':')[1].trim()).format('YYYY-MM-DD');
         if(readText){
             for (var i = 2; i < lines.length; ++i)

@@ -6,140 +6,202 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Link, withRouter } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
 import axios from 'axios';
+import { Formik } from 'formik'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 const API = 'http://localhost:5000/api';
 
 
 
-const NoteList = props => {
-    const [dateFrom,setDateFrom]= React.useState(props.dateFrom || moment(new Date().setMonth(2)).format("YYYY-MM-DD"));
-    const [dateTo,setDateTo] = React.useState(props.dateTo || moment(new Date()).format("YYYY-MM-DD"));
-    const [category,setCategory] = React.useState(props.category || '');
-    const [page,setCurrentPage]= React.useState(props.page || 1);
-    const [notes, setNotes] = React.useState([]);
-    const [categories, setCategories] = React.useState([]);
-    const [pager, setPager] = React.useState({});
-    useEffect(() => {
-        loadPage();
-    },[dateFrom,dateTo,category,page]);
 
-    const loadPage = () => {
-        //const params = new URLSearchParams(location.search);
+class NoteList extends  Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            dateFrom: props.dateFrom || moment(new Date().setMonth(2)).format("YYYY-MM-DD"),
+            dateTo: props.dateTo || moment(new Date()).format("YYYY-MM-DD"),
+            category: props.category || '',
+            page: props.page || 1,
+            notes:[],
+            categories:[],
+            pager:{}
+        }
+    }
+
+    loadPage(){
+        const params = new URLSearchParams(window.location.search);
+        console.log("I'm called")
+        console.log(`${API}/notes?page=${this.state.page}&category=${this.state.category}&dateFrom=${this.state.dateFrom &&
+                moment(this.state.dateFrom).format("YYYY-MM-DD")}&dateTo=${this.state.dateTo &&
+                moment(this.state.dateTo).format("YYYY-MM-DD")}`)
+        let respon={}
         axios
             .get(
-                `${API}/notes?page=${page}&category=${category}&dateFrom=${dateFrom &&
-                moment(dateFrom).format("YYYY-MM-DD")}&dateTo=${dateTo &&
-                moment(dateTo).format("YYYY-MM-DD")}`
+                `${API}/notes?page=${this.state.page}&category=${this.state.category}&dateFrom=${this.state.dateFrom &&
+                moment(this.state.dateFrom).format("YYYY-MM-DD")}&dateTo=${this.state.dateTo &&
+                moment(this.state.dateTo).format("YYYY-MM-DD")}`
             )
-            .then(res => res.data)
-            .then(({ pager, pageOfNotes, categories }) => {
-                setPager(pager);
-                setNotes(pageOfNotes);
-                setCategories(categories);
+            .then(res => respon=res.data)
+            .then(({ pager, notes, categories }) => {
+                const currState = this.state;
+                currState.pager=pager;
+                currState.notes=notes ? JSON.parse(JSON.stringify(notes)) : [];
+                currState.categories=categories ? JSON.parse(JSON.stringify(categories)):[];
+                this.setState({currState})
             });
+        console.log(this.state.dateFrom)
+        console.log(this.state.pager)
+        console.log(this.state.notes)
+        console.log(this.state.categories)
+        console.log(respon)
+    };
+    componentDidMount(){
+        console.log("I'm called")
+        this.loadPage();
+    }
+
+    // const deleteNote = title => {
+    //     axios
+    //         .delete(`${API}/notes/${title}`)
+    //         .then(res => {
+    //             if (res.data === 'Success') {
+    //                 setNotes(notes.filter(note => note.title !== title));
+    //             }
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         });
+    // };
+
+    // const setFilters = (newCategory, newStartDate, newEndDate) => {
+    //     // dispatch({
+    //     //     type: 'changeCategoryFilter',
+    //     //     newCategory: newCategory,
+    //     // });
+    //     // dispatch({
+    //     //     type: 'changeStartDate',
+    //     //     newStartDate: newStartDate,
+    //     // });
+    //     // dispatch({
+    //     //     type: 'changeEndDate',
+    //     //     newEndDate: newEndDate,
+    //     // });
+    // };
+
+    handleSubmit=({e}) =>{
+        e.preventDefault();
+        this.loadPage()
     };
 
-    const deleteNote = title => {
-        axios
-            .delete(`${API}/notes/${title}`)
-            .then(res => {
-                if (res.data === 'Success') {
-                    setNotes(notes.filter(note => note.title !== title));
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            });
+    handleChange = ({ target }) => {
+        const formValues  = this.state;
+        formValues[target.name] = target.value;
+        this.setState({ formValues });
+        this.loadPage()
     };
+    previousPage=()=>{
+        const formValues  = this.state;
+        formValues.page=formValues.page-1;
+        this.setState({ formValues });
+        this.loadPage()
+    }
 
-    const setPage = page => {
-        // dispatch({
-        //     type: 'changePage',
-        //     newPage: page,
-        // });
-    };
+    nextPage=()=>{
+        const formValues  = this.state;
+        formValues.page=formValues.page+1;
+        this.setState({ formValues });
+        this.loadPage()
+    }
 
-    const setFilters = (newCategory, newStartDate, newEndDate) => {
-        // dispatch({
-        //     type: 'changeCategoryFilter',
-        //     newCategory: newCategory,
-        // });
-        // dispatch({
-        //     type: 'changeStartDate',
-        //     newStartDate: newStartDate,
-        // });
-        // dispatch({
-        //     type: 'changeEndDate',
-        //     newEndDate: newEndDate,
-        // });
-    };
-
-    const handleSubmit = async e => {
-        loadPage()
-    };
-
-
-
-    return<div>
-        <h1>Note's list</h1>
-        <Form onSubmit={handleSubmit}>
-            <Form.Group>
-                <Form.Label>Date</Form.Label><br/>
-                <Form.Control
-                    type="date"
-                    name="dateFrom"
-                    onChange={e => {
-                        setDateFrom(e.target.value);
-                    }}
-                    value={dateFrom}
-                />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>Date</Form.Label><br/>
-                <Form.Control
-                    type="date"
-                    name="dateTo"
-                    onChange={e => {
-                        setDateTo(e.target.value);
-                    }}
-                    value={dateTo}
-                />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>Category</Form.Label><br/>
-                <Form.Control as="select" name="categories"
-                    onChange={e => {
-                        setCategory(e.target.value);
-                    }}
-                    value={{category}}>
-                    {categories.forEach(c => (
-                            <option>c.title</option>
-                        )
-                    )}
-                </Form.Control>
-            </Form.Group>
-            <Button variant="primary" type="submit" title="Submit">Filter</Button>
-        </Form>
-        <Table striped bordered hover>
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {notes.forEach(n => (
-                    <tr>
-                        <td>{n.title}</td>
-                        <td>{n.date}</td>
-                    </tr>
-                )
-            )}
-            </tbody>
-        </Table>
-        <Link to={'/notes/new'}>
-            <Button type="button" variant="primary">New note</Button>
-        </Link>
-    </div>
+    render(){
+        return <div>
+            {console.log('I render')}
+            <h1>Note's list</h1>
+                    <Form onSubmit={this.handleSubmit}>
+                        <Form.Group>
+                            <Form.Label>Date from</Form.Label><br/>
+                            <Form.Control
+                                type="date"
+                                name="dateFrom"
+                                onChange={e => {
+                                    this.handleChange(e);
+                                }}
+                                value={this.state.dateFrom}
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Date to</Form.Label><br/>
+                            <Form.Control
+                                type="date"
+                                name="dateTo"
+                                onChange={e => {
+                                    this.handleChange(e);
+                                }}
+                                value={this.state.dateTo}
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Category</Form.Label><br/>
+                            <Form.Control as="select" name="category"
+                                          onChange={e => {
+                                              this.handleChange(e);
+                                          }}
+                                          value={this.state.category}>
+                                {this.state.categories.map(c => (
+                                        <option>{c.title}</option>
+                                    )
+                                )}
+                            </Form.Control>
+                        </Form.Group>
+                        <Button variant="primary" type="submit" title="Submit">Filter</Button>
+                    </Form>
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.state.notes.map(n => (
+                        <tr>
+                            <td>{n.title}</td>
+                            <td>{n.date}</td>
+                            <td>
+                                <Link to={`/notes/edit/${n.title}`}>
+                                    <Button type="button" variant="secondary">Edit</Button>
+                                </Link>
+                                <Button type="button" variant="secondary" onClick={() => this.delete(n.title)}>Delete</Button>
+                            </td>
+                        </tr>
+                    )
+                )}
+                </tbody>
+            </Table>
+                <Row>
+                    <Col>
+                        <Link to={'/notes/new'}>
+                            <Button type="button" variant="primary">New note</Button>
+                        </Link>
+                    </Col>
+                    <Button
+                        variant="secondary"
+                        onClick={() => this.previousPage()}
+                        disabled={this.state.pager.currentPage === 1 || !this.state.pager.currentPage}
+                    >
+                        Prev Page
+                    </Button>
+                    {`${this.state.pager.currentPage || 1} / ${this.state.pager.endPage || 1}`}
+                    <Button
+                        variant="secondary"
+                        onClick={() => this.nextPage()}
+                        disabled={this.state.pager.currentPage === this.state.pager.endPage || !this.state.pager.currentPage}
+                    >
+                        Next Page
+                    </Button>
+                </Row>
+        </div>
+    }
 }
 
 export default withRouter(NoteList);
