@@ -84,8 +84,12 @@ class NoteList extends  Component {
     //     // });
     // };
 
-    handleSubmit=({e}) =>{
+    handleSubmit=(e) =>{
         e.preventDefault();
+        const formValues  = this.state;
+        for(let i=0;i<e.target.childElementCount;++i)
+            formValues[e.target[i].name] = e.target[i].value
+        this.setState({ formValues });
         this.loadPage()
     };
 
