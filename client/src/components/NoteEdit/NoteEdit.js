@@ -20,23 +20,32 @@ const NoteEdit = props => {
     const newCategory = '';
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const [removeEnabled, setRemoveEnabled] = React.useState(false);
-    const [categories, setCategories] = React.useState(props.noteCategories || [{id:0, title:'first category'},{id:1, title:'second category'}]);
+    const [categories, setCategories] = React.useState(props.noteCategories || []);
     const [errorMessage, setErrorMessage] = React.useState('');
 
 
     const validate = values =>{
+        values.categories=categories
         const errors = {};
         if (!values.title) {
         errors.title = 'Title is Required';
+        }
+        if(values.categories.length===0){
+            errors.categories='At least one category is required'
         }
         return errors;
     }
 
     const handleAddCategory = newCategory =>{
+        const errors={}
         if(newCategory!=='')
         {
             if(categories.filter(c=>c.title===newCategory).length===0)
                 setCategories(categories.concat({title: newCategory}))
+        }
+        else {
+            alert('Can\'t add empty category')
+            //return errors
         }
     }
 
@@ -104,7 +113,7 @@ const NoteEdit = props => {
                 validate={validate}
                 onSubmit={handleOnSubmit}
             >
-                {({ handleChange, validate, values, handleSubmit, isSubmitting }) => (
+                {({ handleChange, errors, values, handleSubmit, isSubmitting }) => (
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Title</Form.Label><br/>
@@ -114,6 +123,7 @@ const NoteEdit = props => {
                             onChange={handleChange}
                             value={values.title}
                           />
+                        {errors.title}
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Text</Form.Label><br/>
@@ -151,9 +161,11 @@ const NoteEdit = props => {
                                 onChange={handleChange}
                                 value={values.newCategory}
                             />
+                        {errors.newCategory}
                         <Button variant="outline-primary" onClick={() => { handleAddCategory(values.newCategory); values.newCategory = ''; }}
                                 title="Add category">Add category</Button>
                     </Form.Group>
+                    {errors.categories}
                     <Form.Group>
                         <Form.Label>Note's categories</Form.Label><br/>
                         <ListGroup>
@@ -166,6 +178,7 @@ const NoteEdit = props => {
                         </ListGroup>
                         <Button variant="outline-primary" onClick={handleRemoveCategory} title="Remove category">Remove category</Button>
                     </Form.Group>
+                    {errorMessage}
                     <Button variant="primary" type="submit" title="Submit">Create note</Button>
                 </Form>
                 )}

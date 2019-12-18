@@ -8,64 +8,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import NoteNew from './components/NoteNew/NoteNew';
 import NoteList from './components/NoteList/NoteList';
-import NoteEdit from './components/NoteEdit/NoteEdit';
-import {StateProvider} from "./state";
-import moment from 'moment'
 
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import NoteContainer from "./containers/NoteContainer";
-//import { StateProvider } from './state';
 
 class App extends Component {
-  state = {
-    page: 1,
-    category: '',
-    dateFrom:  moment(new Date().setMonth(2)).format("YYYY-MM-DD"),
-    dateTo:  moment(new Date()).format("YYYY-MM-DD")
-  };
 
-  // initialState = {
-  //   category: '',
-  //   page: 1,
-  //   dateFrom:  moment(new Date().setMonth(2)).format("YYYY-MM-DD"),
-  //   dateTo:  moment(new Date()).format("YYYY-MM-DD")
-  // };
   
   componentDidMount() {
 
   }
 
-  reducer = (state, action) => {
-    switch (action.type) {
-      case 'changePage':
-        return {
-          ...state,
-          page: action.newPage,
-        };
-      case 'changeCategoryFilter':
-        return {
-          ...state,
-          category: action.newCategory,
-        };
-      case 'changeStartDate':
-        return {
-          ...state,
-          startDate: action.newStartDate,
-        };
-      case 'changeEndDate':
-        return {
-          ...state,
-          endDate: action.newEndDate,
-        };
-      default:
-        return state;
-    }
-  };
   
 render() {
     return (
-    <StateProvider initialState={this.state} reducer={this.reducer}>
       <Router>
         <Container>
           <Route exact path="/notes/new" component={NoteNew} />
@@ -73,14 +30,8 @@ render() {
           <Route exact path="/" component={NoteList} />
         </Container>
       </Router>
-    </StateProvider>
     );
   }
 }
 
 export default App;
-
-// import NotesContainer from './containers/NotesContainer';
-// import NoteContainer from './containers/NoteContainer';
-/* <Route exact path="/notes/edit/:title" component={NoteContainer} />
-          <Route exact path="/notes/new" component={NoteNew} /> */

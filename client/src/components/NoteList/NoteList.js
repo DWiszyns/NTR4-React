@@ -1,15 +1,12 @@
-import React,{Component,useState,useEffect} from 'react';
+import React,{Component} from 'react';
 import Form from 'react-bootstrap/Form';
-import moment, {Moment} from 'moment'
+import moment from 'moment'
 import Button from 'react-bootstrap/Button';
-import ListGroup from 'react-bootstrap/ListGroup';
 import { Link, withRouter } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
 import axios from 'axios';
-import { Formik } from 'formik'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { useStateValue } from '../../state';
 const API = 'http://localhost:5000/api';
 
 
@@ -29,7 +26,7 @@ class NoteList extends  Component {
     }
 
     loadPage(){
-        const params = new URLSearchParams(window.location.search);
+        //const params = new URLSearchParams(window.location.search);
         let respon={}
         axios
             .get(
@@ -49,7 +46,10 @@ class NoteList extends  Component {
                 localStorage.setItem("category",this.state.category)
 
                 this.setState({currState})
-            });
+            })
+            .catch(err => {
+            console.log(err);
+        });
         console.log(this.state.dateFrom)
         console.log(this.state.pager)
         console.log(this.state.notes)
@@ -74,34 +74,11 @@ class NoteList extends  Component {
             });
     };
 
-    // setPage=(newPage) =>{
-    //     this.dispatch({
-    //         type: 'changePage',
-    //         newCategory: newPage,
-    //     });
-    // };
-    //
-    // setFilters = (newCategory, newStartDate, newEndDate) => {
-    //     this.dispatch({
-    //         type: 'changeCategoryFilter',
-    //         newCategory: newCategory,
-    //     });
-    //     this.dispatch({
-    //         type: 'changeStartDate',
-    //         newStartDate: newStartDate,
-    //     });
-    //     this.dispatch({
-    //         type: 'changeEndDate',
-    //         newEndDate: newEndDate,
-    //     });
-   // };
-
     handleSubmit=(e) =>{
         e.preventDefault();
         const formValues  = this.state;
         for(let i=0;i<e.target.childElementCount;++i)
             formValues[e.target[i].name] = e.target[i].value
-        //this.setFilters(formValues.category,formValues.dateFrom,formValues.dateTo)
         this.setState({ formValues });
         this.loadPage()
     };
@@ -110,12 +87,10 @@ class NoteList extends  Component {
         const formValues  = this.state;
         formValues[target.name] = target.value;
         this.setState({ formValues });
-       // this.loadPage()
     };
     previousPage=()=>{
         const formValues  = this.state;
         formValues.page=formValues.page-1;
-        //this.setPage(formValues.page)
         this.setState({ formValues });
         this.loadPage()
     };
@@ -123,7 +98,6 @@ class NoteList extends  Component {
     nextPage=()=>{
         const formValues  = this.state;
         formValues.page=formValues.page+1;
-       // this.setPage(formValues.page)
         this.setState({ formValues });
         this.loadPage()
     };
