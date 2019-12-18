@@ -9,8 +9,8 @@ import axios from 'axios';
 import { Formik } from 'formik'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { useStateValue } from '../../state';
 const API = 'http://localhost:5000/api';
-
 
 
 
@@ -18,10 +18,10 @@ class NoteList extends  Component {
     constructor(props) {
         super(props);
         this.state={
-            dateFrom: props.dateFrom || moment(new Date().setMonth(2)).format("YYYY-MM-DD"),
-            dateTo: props.dateTo || moment(new Date()).format("YYYY-MM-DD"),
-            category: props.category || '',
-            page: props.page || 1,
+            dateFrom: localStorage.getItem("dateFrom") || moment(new Date().setMonth(2)).format("YYYY-MM-DD"),
+            dateTo: localStorage.getItem("dateTo")  || moment(new Date()).format("YYYY-MM-DD"),
+            category: localStorage.getItem("category")  || '',
+            page: localStorage.getItem("page")  || 1,
             notes:[],
             categories:[],
             pager:{}
@@ -43,6 +43,11 @@ class NoteList extends  Component {
                 currState.pager=pager;
                 currState.notes=notes ? JSON.parse(JSON.stringify(notes)) : [];
                 currState.categories=categories ? [{title:''}].concat(JSON.parse(JSON.stringify(categories))):[];
+                localStorage.setItem("page",this.state.page)
+                localStorage.setItem("dateTo",this.state.dateTo)
+                localStorage.setItem("dateFrom",this.state.dateFrom)
+                localStorage.setItem("category",this.state.category)
+
                 this.setState({currState})
             });
         console.log(this.state.dateFrom)
@@ -69,26 +74,34 @@ class NoteList extends  Component {
             });
     };
 
-    // const setFilters = (newCategory, newStartDate, newEndDate) => {
-    //     // dispatch({
-    //     //     type: 'changeCategoryFilter',
-    //     //     newCategory: newCategory,
-    //     // });
-    //     // dispatch({
-    //     //     type: 'changeStartDate',
-    //     //     newStartDate: newStartDate,
-    //     // });
-    //     // dispatch({
-    //     //     type: 'changeEndDate',
-    //     //     newEndDate: newEndDate,
-    //     // });
+    // setPage=(newPage) =>{
+    //     this.dispatch({
+    //         type: 'changePage',
+    //         newCategory: newPage,
+    //     });
     // };
+    //
+    // setFilters = (newCategory, newStartDate, newEndDate) => {
+    //     this.dispatch({
+    //         type: 'changeCategoryFilter',
+    //         newCategory: newCategory,
+    //     });
+    //     this.dispatch({
+    //         type: 'changeStartDate',
+    //         newStartDate: newStartDate,
+    //     });
+    //     this.dispatch({
+    //         type: 'changeEndDate',
+    //         newEndDate: newEndDate,
+    //     });
+   // };
 
     handleSubmit=(e) =>{
         e.preventDefault();
         const formValues  = this.state;
         for(let i=0;i<e.target.childElementCount;++i)
             formValues[e.target[i].name] = e.target[i].value
+        //this.setFilters(formValues.category,formValues.dateFrom,formValues.dateTo)
         this.setState({ formValues });
         this.loadPage()
     };
@@ -102,6 +115,7 @@ class NoteList extends  Component {
     previousPage=()=>{
         const formValues  = this.state;
         formValues.page=formValues.page-1;
+        //this.setPage(formValues.page)
         this.setState({ formValues });
         this.loadPage()
     };
@@ -109,6 +123,7 @@ class NoteList extends  Component {
     nextPage=()=>{
         const formValues  = this.state;
         formValues.page=formValues.page+1;
+       // this.setPage(formValues.page)
         this.setState({ formValues });
         this.loadPage()
     };

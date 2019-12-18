@@ -35,50 +35,37 @@ class App extends Component {
   componentDidMount() {
 
   }
-  
-  // handleSubmit = async e => {
-  //   e.preventDefault();
-  //   const response = await fetch('/api/world', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ post: this.state.post }),
-  //   });
-  //   const body = await response.text();
-  //
-  //   this.setState({ responseToPost: body });
-  // };
-  // reducer = (state, action) => {
-  //   switch (action.type) {
-  //     case 'changePage':
-  //       return {
-  //         ...state,
-  //         page: action.newPage,
-  //       };
-  //     case 'changeCategoryFilter':
-  //       return {
-  //         ...state,
-  //         category: action.newCategory,
-  //       };
-  //     case 'changeStartDate':
-  //       return {
-  //         ...state,
-  //         startDate: action.newStartDate,
-  //       };
-  //     case 'changeEndDate':
-  //       return {
-  //         ...state,
-  //         endDate: action.newEndDate,
-  //       };
-  //     default:
-  //       return state;
-  //   }
-  // };
+
+  reducer = (state, action) => {
+    switch (action.type) {
+      case 'changePage':
+        return {
+          ...state,
+          page: action.newPage,
+        };
+      case 'changeCategoryFilter':
+        return {
+          ...state,
+          category: action.newCategory,
+        };
+      case 'changeStartDate':
+        return {
+          ...state,
+          startDate: action.newStartDate,
+        };
+      case 'changeEndDate':
+        return {
+          ...state,
+          endDate: action.newEndDate,
+        };
+      default:
+        return state;
+    }
+  };
   
 render() {
     return (
-    //<StateProvider initialState={this.initialState} reducer={this.reducer}>
+    <StateProvider initialState={this.state} reducer={this.reducer}>
       <Router>
         <Container>
           <Route exact path="/notes/new" component={NoteNew} />
@@ -86,7 +73,7 @@ render() {
           <Route exact path="/" component={NoteList} />
         </Container>
       </Router>
-   // </StateProvider>
+    </StateProvider>
     );
   }
 }
