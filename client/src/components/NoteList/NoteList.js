@@ -42,7 +42,7 @@ class NoteList extends  Component {
                 const currState = this.state;
                 currState.pager=pager;
                 currState.notes=notes ? JSON.parse(JSON.stringify(notes)) : [];
-                currState.categories=categories ? JSON.parse(JSON.stringify(categories)):[];
+                currState.categories=categories ? [{title:''}].concat(JSON.parse(JSON.stringify(categories))):[];
                 this.setState({currState})
             });
         console.log(this.state.dateFrom)
