@@ -13,7 +13,7 @@ const API = 'http://localhost:5000/api';
 
 const NoteEdit = props => {
     const title = props.title || 'Enter title';
-    const text = props.content || 'Enter text';
+    const text = props.content || (props.title? '':'Enter text');
     const markdown = props.markdown || false;
     const date = props.date || moment(new Date()).format("YYYY-MM-DD");
     const mode = props.mode==='new'? props.mode : 'edit';
