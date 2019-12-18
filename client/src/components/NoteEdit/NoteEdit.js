@@ -123,7 +123,8 @@ const NoteEdit = props => {
                             onChange={handleChange}
                             value={values.title}
                           />
-                        {errors.title}
+                        <span style={{color:'red'}}>{errors.title}</span>
+                        <span style={{color:'red'}}>{errorMessage}</span>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Text</Form.Label><br/>
@@ -161,11 +162,9 @@ const NoteEdit = props => {
                                 onChange={handleChange}
                                 value={values.newCategory}
                             />
-                        {errors.newCategory}
                         <Button variant="outline-primary" onClick={() => { handleAddCategory(values.newCategory); values.newCategory = ''; }}
                                 title="Add category">Add category</Button>
                     </Form.Group>
-                    {errors.categories}
                     <Form.Group>
                         <Form.Label>Note's categories</Form.Label><br/>
                         <ListGroup>
@@ -177,8 +176,8 @@ const NoteEdit = props => {
                             ))}
                         </ListGroup>
                         <Button variant="outline-primary" onClick={handleRemoveCategory} title="Remove category">Remove category</Button>
+                        <span style={{color:'red'}}>{errors.categories}</span>
                     </Form.Group>
-                    {errorMessage}
                     <Button variant="primary" type="submit" title="Submit">Create note</Button>
                 </Form>
                 )}

@@ -51,7 +51,7 @@ module.exports = class NoteRepository {
 
     update(oldTitle, newNote)
     {
-        if (oldTitle !== newNote.title && this.noteExists(newNote)) {
+        if (oldTitle !== newNote.title && this.noteExists(newNote)!==fileExist.NO) {
             throw Error(`Note '${newNote.title}' already exists`);
         }
         this.delete(oldTitle);
