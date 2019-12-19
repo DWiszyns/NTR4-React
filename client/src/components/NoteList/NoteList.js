@@ -18,7 +18,7 @@ class NoteList extends  Component {
             dateFrom: localStorage.getItem("dateFrom") || moment(new Date().setMonth(2)).format("YYYY-MM-DD"),
             dateTo: localStorage.getItem("dateTo")  || moment(new Date()).format("YYYY-MM-DD"),
             category: localStorage.getItem("category")  || '',
-            page: localStorage.getItem("page")  || 1,
+            page: parseInt(localStorage.getItem("page"))  || 1,
             notes:[],
             categories:[],
             pager:{}
@@ -40,6 +40,7 @@ class NoteList extends  Component {
                 currState.pager=pager;
                 currState.notes=notes ? JSON.parse(JSON.stringify(notes)) : [];
                 currState.categories=categories ? [{title:''}].concat(JSON.parse(JSON.stringify(categories))):[];
+                currState.page = currState.page > pager.endPage ? 1 : currState.page
                 localStorage.setItem("page",this.state.page)
                 localStorage.setItem("dateTo",this.state.dateTo)
                 localStorage.setItem("dateFrom",this.state.dateFrom)
@@ -50,10 +51,7 @@ class NoteList extends  Component {
             .catch(err => {
             console.log(err);
         });
-        console.log(this.state.dateFrom)
-        console.log(this.state.pager)
-        console.log(this.state.notes)
-        console.log(this.state.categories)
+        console.log(this.state.page)
         console.log(respon)
     };
     componentDidMount(){

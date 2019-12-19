@@ -42,6 +42,8 @@ const NoteEdit = props => {
         {
             if(categories.filter(c=>c.title===newCategory).length===0)
                 setCategories(categories.concat({title: newCategory}))
+            else 
+                alert('Can\'t have multiple same categories')    
         }
         else {
             alert('Can\'t add empty category')
